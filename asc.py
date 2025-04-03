@@ -1,4 +1,9 @@
 import math
+from datetime import datetime, timedelta
+import juliandate
+import pytz
+from astropy.coordinates.earth_orientation import obliquity as calculate_obliquity
+
 
 # Constants
 VERY_SMALL = 1e-10
@@ -156,11 +161,19 @@ def calculate_auxiliary_ascendant(x: float, latitude: float, sine: float, cosine
         auxiliary_ascendant = 180.0 + auxiliary_ascendant
     return auxiliary_ascendant
 
-# Example usage
-latitude = 52.5200  # Example latitude
-longitude = 13.4050  # Example longitude
-sine = sine_degrees(23.44)  # Example obliquity of the ecliptic
-cosine = cosine_degrees(23.44)  # Example obliquity of the ecliptic
 
-ascendant = calculate_ascendant(longitude, latitude, sine, cosine)
-print(f"Ascendant: {ascendant}")
+if __name__ == "__main__":
+    # Calculate for J2000 (June 10, 1993, 12:15 GMT+1)
+    j2000 = datetime(1993, 6, 10, 12, 15)
+    j2000 = juliandate.from_gregorian(j2000.year, j2000.month, j2000.day, j2000.hour, j2000.minute, j2000.second)
+    obliquity_j2000 = calculate_obliquity(j2000)
+    print(f"Obliquity of the ecliptic for J2000: {obliquity_j2000}")
+
+    #45.41317 10.39799
+    latitude = 45.41317  # Example latitude
+    longitude = 10.39799  # Example longitude
+    sine = sine_degrees(obliquity_j2000)
+    cosine = cosine_degrees(obliquity_j2000)
+
+    ascendant = calculate_ascendant(longitude, latitude, sine, cosine)
+    print(f"Ascendant: {ascendant}")
