@@ -36,9 +36,7 @@ pianeti = {
     "Urano": eph['uranus barycenter'],
     "Nettuno": eph['neptune barycenter'],
     "Plutone": eph['pluto barycenter'],
-    "Nodo Lunare Ascendente": eph['ascending node'],
 }
-
 terra = eph['earth']
 
 # Ottieni il tempo UTC attuale
@@ -48,7 +46,6 @@ t = load.timescale().utc(datetime.now(timezone.utc))
 print(f"UTC: {t.utc_iso()}\n")
 for nome, corpo in pianeti.items():
     astro = terra.at(t).observe(corpo).apparent()
-    _, lon, _ = astro.ecliptic_latlon()  # Ottieni la longitudine eclittica
+    lat, lon, distance = astro.ecliptic_latlon()
     segno = trova_segno_zodiacale(lon.degrees)
-    print(f"{nome}: {lon.degrees:.6f}° → {segno}")
-
+    print(f"{nome}: {lon.degrees}° → {segno}")
